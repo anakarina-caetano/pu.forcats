@@ -2,6 +2,41 @@
 title: "Conceitos"
 ---
 
+## Estrutura básica
+
+O `forcats` é um pacote simples. Ele é composto por funções de apenas dois tipos:
+
+- Funções que começam com `fct_`, que recebem uma lista de fatores e devolvem um fator.
+    - Exemplo: `fct_c` recebe uma lista de fatores e devolve um fator que é a união dos anteriores.s
+    
+```{r}
+
+fator_1 <- factor(c("a","b","c"))
+fator_2 <- factor(c("d","e"))
+
+fator_3_sem_sentido <- c(fator_1, fator_2)
+
+fator_3_sem_sentido
+
+fator_3_com_sentido <- forcats::fct_c(list(fator_1, fator_2))
+
+fator_3_com_sentido
+
+```
+    
+- Funções que começam com `lvl_`, que trabalham com os níveis de um ou mais fatores.
+    - Exemplo: `lvl_revalue` recebe um fator e uma permutação dos níveis.
+    
+```{r}
+
+fator <- factor(c("a","b","c"))
+
+novos_niveis <- c("c", "b", "a")
+  
+fator <- forcats::lvls_revalue(fator, novos_niveis)
+
+``` 
+
 ```{r, message=FALSE, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE, 
@@ -10,3 +45,110 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Principais funções
+
+Nesta seção vamos estudar o funcionamento das principais funções do `forcats` utilizando como motivação a visualização dos dados de uma base de dados da Associação Brasileira de Jurimetria. Essa base é constituída por informações sobre as vítimas de uma amostra de homicídios no município de São Paulo.
+
+# Modificar níveis de fatores
+
+O instrumento usado nos homicídios está registrado na variável `instrumento.usado`. A tabela abaixo ilustra a distribuição dos valores dessa variável.
+
+```{r, echo = F}
+
+bd_enasp_abj %>% 
+  count(instrumento.usado) %>% 
+  arrange(desc(n)) %>% 
+  rename(`Frequência` = n) %>% 
+  knitr::kable(digits = 0)
+
+```
+
+Como existe uma grande variabilidade de instrumentos, no que segue vamos reclassificar a variável `instrumento.usado` em um fator com níveis menos gerais utiliando as funções do `forcats`.
+
+Para realizar essa tarefa, vamos utilizar a função `fct_collapse`. Essa função é uma generalização de uma outra função chamada `fct_recode`. A função `fct_collapse` recebe um fator e uma série de vetores de caractéres nomeados e a função `fct_recode` recebe um fator e uma série de `strings` nomeadas. Abaixo exemplificamos a utilização das duas:
+
+```{r}
+
+fator <- factor(c("a", "b", "c", "d"))
+
+fct_collapse(fator, b2 = c("b", "c"), a2 = c("a", "d"))
+fct_collapse(fator, b2 = "b", b2 = "c", a2 = "a", a2 = "d")
+
+```
+
+Voltando à nossa aplicação, vamos utilizar a função `fct_collapse` para recodificar a variável `instrumento.usado`:
+
+```{r}
+
+bd_enasp_abj <- bd_enasp_abj %>% 
+  mutate(instrumento.usado = fct_collapse(instrumento.usado,
+        `Outros` = c("Veículo", "Agressão física", "Intoxicação por álcool etílico"),
+    `Arma branca` = c("Agente asfixico direto e indireto","Agente contundente", "Barra de ferro", "Cadarço","Faca", "Fio elétrico", "Fio elétrico (vítima foi estrangulada)", "Fogo", "Instrumento contundente", "Machadinha", "Tesoura")))
+
+```
+
+Após a reclassificação a distribuição fica:
+
+```{r}
+
+bd_enasp_abj %>% 
+  count(instrumento.usado) %>% 
+  knitr::kable()
+
+```
+
+# Reordenar níveis de fatores
+
+Vamos visualizar a tabela anterior como um gráfico.
+
+```{r, echo = F}
+
+bd_enasp_abj %>% 
+  ggplot(aes(x = instrumento.usado, fill = instrumento.usado)) + 
+  geom_bar() +
+  theme_bw(15) +
+  xlab("Intrumento usado") + 
+  ylab("Frequência") + 
+  theme(legend.position = 'none')
+
+```
+
+A ordem das barras nesse gráfico não está muito intuitiva, pois uma arma de fogo é um instrumento de crime mais perigoso e mais frequente do que uma arma branca, mas o eixo das abscissas não deixa isso claro. Além disso, essa contra-intuitividade também aparece se aplica aos níveis "Outros" e "Ignorado". É razoável esperar que os a contagem dos ignorados seja o menor nível do fator, para que essa quantidade seja observada primeiro.
+
+O `forcats` disponibiliza duas funções para manipulação da ordem dos níveis. Elas são
+
+- `lvl_reorder`, que reordena os níveis de um fator de acordo com um conjunto de índices. Recomenda-se o uso dessa função quando se quer reordenar os níveis de uma maneira facilmente parametrizável como uma permutação desses.
+- `fct_reorder` e `fct_reorder2`, que reordenam os níveis de um fator `f` de acordo com a aplicação de uma função em um vetor (ou dois no caso de `fct_reorder2`) agrupado por `f`. Recomenda-se o uso dessa função quando se quer reordenar os níveis considerando os valores de uma outra variável.
+
+Na nossa aplicação, é adequado utilizar a função `lvls_reorder`. Confira o resultado da utilização abaixo.
+
+```{r, echo = F}
+
+bd_enasp_abj %>%
+  mutate(instrumento.usado = lvls_reorder(instrumento.usado, c(4,5,2,1,3))) %>% 
+  ggplot(aes(x = instrumento.usado, fill = instrumento.usado)) + 
+  geom_bar() +
+  theme_bw(15) +
+  xlab("Intrumento usado") + 
+  ylab("Frequência") + 
+  theme(legend.position = 'none')
+
+```
+
+Ainda existem duas outras maneiras de modificar os valores de um fator. `fct_relevel` e `lvls_revalue` são duas funções similares que possibilitam uma reclassificação mais direta dos níveis de um fator, definindo uma ordem específica. A utilidade de cada uma dessas funções é maximizada em alguns casos específicos:
+
+- A função `lvls_revalue` recebe um fator e vetor que corresponderá aos novos níveis do fator. `lvls_revalue(fator, v)` é equivalente a `levels(fator) = v`.
+
+- A função `fct_relevel` recebe um fator e uma sequência de `strings` com os níveis desse fator reordenado. Não é necessário que todos os níveis apareçam nessa sequência. Inclusive, essa função pode ser utilizada apenas para "puxar" um fator para o nível mais baixo, mantendo os outros com a mesma ordem relativa. É uma generalização da função `relevel`.
+
+```{r}
+
+fator <- factor(c("a","b","c","d"))
+
+fct_relevel(fator, "d")
+
+fct_relevel(fator, "d", "b")
+
+lvls_revalue(fator, v = c("b", "a", "d", "c"))
+
+```

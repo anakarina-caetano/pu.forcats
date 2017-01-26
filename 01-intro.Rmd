@@ -8,5 +8,85 @@ knitr::opts_chunk$set(
   out.width = "60%", out.height = "60%",
   fig.retina = 2
 )
+
+library(dplyr)
+library(forcats)
+library(ggplot2)
+
+bd_enasp_abj <- openxlsx::read.xlsx(xlsxFile = "/home/fcorrea2/Downloads/Banco de dados Cruzamentos.xlsx") %>% 
+  filter(instrumento.usado != "Excluir") %>% 
+  mutate_all(funs(as.factor))
 ```
 
+## Introdução
+
+Se você já utilizou R anteriormente, provavelmente já escreveu a expressão `stringsAsFactors = F` quando importava dados usando as funções `read.csv` ou `read.table`. É muito frustrante quando uma coluna de `strings` é lida como um fator, comportam-se de maneira completamente diferente.
+
+Felizmente, depois de aprender a usar o `tidyverse` você não terá mais esse problema, pois o pacote `readr` não lê colunas de caracteres como fatores por padrão. Mas isso não significa que fatores são inúteis. Eles representam uma forma muito prática de lidar com variáveis categorizadas, tanto para fins de modelagem quanto para fins de visualização. 
+
+Grande parte da frustração associada ao uso de fatores no R existe por conta da falta de algumas ferramentas úteis no pacote `base`. Para resolver esse o problema, Hadley Wickham ajudou a comunidade R (de novo) desenvolvendo o pacote `forcats`(**for** **ca**tegorial variable**s**), que implementa algumas dessas ferramentas.
+
+As principais funções do `forcats` servem para alterar a *ordem* e modificar os *níveis* de um fator. Para exemplificar a utilidade dessas funções, neste Power Up vamos utilizá-las em situações corriqueiras.
+
+# O que são fatores?
+
+Em R, fatores são estruturas de dados utilizadas para ordenar `strings`. Formalmente, um fator é definido como um vetor de números inteiros com dois atributos específicos:
+
+- `levels`: Um vetor de textos que indica a relação de ordem entre as variáveis.
+- `class`: A string `"factor"`.
+
+Em modelos estatísticos clássicos, como ANOVA, é útil e adequado interpretar um vetor de textos como um vetor de números inteiros. O nome "fator", inclusive, foi definido fazendo alusão à literatura estatística.
+
+# Para que fatores servem?
+
+Fatores são úteis principalmente porque facilitam a ordenação de vetores de texto, principalmente quando estamos fazendo gráficos. Nesta seção vamos ilustrar essa facilidade com um exemplo.
+
+Considere que temos interesse em construir um gráfico que ilustre a diminuição da pressão sanguinea média de um conjunto de indivíduos em função do restaurante em que acabaram de jantar. Para realizar esta tarefa, fomo à praça de alimentação de um shopping e anotamos as pressões arteriais de 10 voluntários conforme eles terminavam suas refeições nos restarantes Max Donalds, Frutaria da vila e Outlet.
+
+```{r, echo = F, results = 'hide', message=FALSE}
+
+d <- tibble::tribble(~voluntario, ~restaurante, ~pressao,
+                1,'Frutaria da vila', 12.5/8,
+                2,'Max Donalds', 14.5/8.5,
+                3,'Outlet', 11.5/8,
+                4,'Outlet', 13/8,
+                5,'Max Donalds', 15/7.5,
+                6,'Outlet', 13/8,
+                7,'Frutaria da vila', 12/8,
+                8,'Max Donalds', 15/8,
+                9,'Outlet', 13/8,
+                10,'Frutaria da vila', 12/8)
+
+```
+
+O resultado das nossas medições está descrito na tabela abaixo.
+
+```{r, echo = F}
+
+knitr::kable(d, digits = 2)
+  
+
+``` 
+ 
+Utilizando esses dados, o gráfico desejado fica:
+
+```{r}
+
+d %>% 
+ggplot(aes(x = restaurante, y = pressao)) +
+  geom_point() + 
+  theme_bw(15)
+
+```
+
+Mas, sabendo que o Max Donalds oferece uma refeição muito mais calórica do que o Outlet, gostaríamos de atribuir essa ordem ao nosso eixo x. Como poderíamos fazer isso? Usando fatores!
+
+```{r}
+
+d %>% 
+mutate(restaurante = factor(restaurante, levels = c("Frutaria da vila", "Outlet", "Max Donalds"))) %>% 
+ggplot(aes(x = restaurante, y = pressao)) +
+  geom_point() + 
+  theme_bw(15)
+
+```
