@@ -9,25 +9,50 @@ knitr::opts_chunk$set(collapse = TRUE)
 <script src="https://cdn.datacamp.com/datacamp-light-latest.min.js"></script>
 
 ```{r, include=FALSE}
+
+library(forcats)
+
+f1 <- factor(letters)
+f2 <- fct_relevel(f1, rev(letters))
+f3 <- lvls_revalue(f1, rev(letters))
+
 tutorial::go_interactive()
 ```
 
-1. Calcule o número de ouro no R.
+1. Transforme o fator `f1` no fator `f2`.
 
-$$
-\frac{1 + \sqrt{5}}{2}
-$$
+```{r, eval = T}
+
+print(f2)
+
+```
 
 ```{r ex="exercicio_01", type="sample-code"}
-# Digite a expressão que calcula o número de ouro.
+# Digite o código aqui
 ```
 
 ```{r ex="exercicio_01", type="solution"}
-(1 + sqrt(5))/2
+fct_relevel(f1, rev(letters))
 ```
 
 ```{r ex="exercicio_01", type="sct"}
-test_output_contains("1.618034", incorrect_msg = "Tem certeza de que indicou a expressão corretamente?")
+test_output_contains("f2", incorrect_msg = "Tem certeza de que indicou a expressão corretamente?")
 success_msg("Correto!")
 ```
 
+2. Transforme o fator `f1` no fator `f3`.
+
+```{r, eval = T}
+
+print(f3)
+
+```
+
+```{r ex="exercicio_02", type="solution"}
+lvls_revalue(f1, rev(letters))
+```
+
+```{r ex="exercicio_01", type="sct"}
+test_output_contains("f3", incorrect_msg = "Tem certeza de que indicou a expressão corretamente?")
+success_msg("Correto!")
+```
