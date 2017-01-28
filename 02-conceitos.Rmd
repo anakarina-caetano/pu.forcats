@@ -24,8 +24,8 @@ fator_3_com_sentido
 
 ```
     
-- Funções que começam com `lvl_`, que trabalham com os níveis de um ou mais fatores.
-    - Exemplo: `lvl_revalue` recebe um fator e uma permutação dos níveis.
+- Funções que começam com `lvl_`, que modificam os níveis de um fator.
+    - Exemplo: `lvl_revalue` recebe um fator e um vetor de `strings ` com dimensão igual ao número de níveis do fator. Retorna um fator cujos níveis são o vetor de `strings` fornecido.
     
 ```{r}
 
@@ -36,14 +36,6 @@ novos_niveis <- c("c", "b", "a")
 fator <- forcats::lvls_revalue(fator, novos_niveis)
 
 ``` 
-
-```{r, message=FALSE, warning=FALSE, include=FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE, 
-  out.width = "60%", out.height = "60%",
-  fig.retina = 2
-)
-```
 
 ## Principais funções
 
@@ -63,9 +55,9 @@ bd_enasp_abj %>%
 
 ```
 
-Como existe uma grande variabilidade de instrumentos, no que segue vamos reclassificar a variável `instrumento.usado` em um fator com níveis menos gerais utiliando as funções do `forcats`.
+Como existe uma grande variabilidade de instrumentos, no que segue vamos reclassificar a variável `instrumento.usado` em um fator com níveis menos gerais.
 
-Para realizar essa tarefa, vamos utilizar a função `fct_collapse`. Essa função é uma generalização de uma outra função chamada `fct_recode`. A função `fct_collapse` recebe um fator e uma série de vetores de caractéres nomeados e a função `fct_recode` recebe um fator e uma série de `strings` nomeadas. Abaixo exemplificamos a utilização das duas:
+Para realizar essa tarefa, vamos utilizar a função `fct_collapse`. Essa função é uma generalização de uma outra função chamada `fct_recode`. A função `fct_collapse` recebe um fator e uma série de vetores de `strings` nomeados e a função `fct_recode` recebe um fator e uma série de `strings` nomeadas. Abaixo exemplificamos a utilização das duas:
 
 ```{r}
 
@@ -113,14 +105,14 @@ bd_enasp_abj %>%
 
 ```
 
-A ordem das barras nesse gráfico não está muito intuitiva, pois uma arma de fogo é um instrumento de crime mais perigoso e mais frequente do que uma arma branca, mas o eixo das abscissas não deixa isso claro. Além disso, essa contra-intuitividade também aparece se aplica aos níveis "Outros" e "Ignorado". É razoável esperar que os a contagem dos ignorados seja o menor nível do fator, para que essa quantidade seja observada primeiro.
+A ordem das barras nesse gráfico não está muito intuitiva, pois uma arma de fogo é um instrumento de crime mais perigoso do que uma arma branca, mas o eixo das abscissas não utiliza essa informação. Além disso, essa contra-intuitividade também se aplica aos níveis "Outros" e "Ignorado". Como a contagem dos ignorados é uma informação que impacta a análise das outras quantidades, é interessante que o nível "Ignorado" seja o primeiro.
 
 O `forcats` disponibiliza duas funções para manipulação da ordem dos níveis. Elas são
 
 - `lvl_reorder`, que reordena os níveis de um fator de acordo com um conjunto de índices. Recomenda-se o uso dessa função quando se quer reordenar os níveis de uma maneira facilmente parametrizável como uma permutação desses.
-- `fct_reorder` e `fct_reorder2`, que reordenam os níveis de um fator `f` de acordo com a aplicação de uma função em um vetor (ou dois no caso de `fct_reorder2`) agrupado por `f`. Recomenda-se o uso dessa função quando se quer reordenar os níveis considerando os valores de uma outra variável.
+- `fct_reorder` e `fct_reorder2`, que reordenam os níveis de um fator `f` de acordo com a aplicação de uma função em um vetor (ou dois no caso de `fct_reorder2`) agrupado por `f`. Recomenda-se o uso dessa função quando se quer reordenar os níveis considerando os valores de uma outra variável ou resultado de um cálculo.
 
-Na nossa aplicação, é adequado utilizar a função `lvls_reorder`. Confira o resultado da utilização abaixo.
+Na nossa aplicação, vamos utilizar a função `lvls_reorder`. Confira o resultado da utilização abaixo.
 
 ```{r, echo = F}
 
@@ -135,11 +127,11 @@ bd_enasp_abj %>%
 
 ```
 
-Ainda existem duas outras maneiras de modificar os valores de um fator. `fct_relevel` e `lvls_revalue` são duas funções similares que possibilitam uma reclassificação mais direta dos níveis de um fator, definindo uma ordem específica. A utilidade de cada uma dessas funções é maximizada em alguns casos específicos:
+Ainda existem duas outras maneiras de modificar os valores de um fator. `fct_relevel` e a já mencionada função `lvls_revalue` são duas funções similares que possibilitam uma reclassificação mais direta dos níveis de um fator, definindo uma determinada ordem. A utilidade de cada uma dessas funções é maximizada em alguns casos específicos:
 
-- A função `lvls_revalue` recebe um fator e vetor que corresponderá aos novos níveis do fator. `lvls_revalue(fator, v)` é equivalente a `levels(fator) = v`.
+<!-- - A função `lvls_revalue` recebe um fator e vetor que corresponderá aos novos níveis do fator. `lvls_revalue(fator, v)` é equivalente a `levels(fator) = v`. -->
 
-- A função `fct_relevel` recebe um fator e uma sequência de `strings` com os níveis desse fator reordenado. Não é necessário que todos os níveis apareçam nessa sequência. Inclusive, essa função pode ser utilizada apenas para "puxar" um fator para o nível mais baixo, mantendo os outros com a mesma ordem relativa. É uma generalização da função `relevel`.
+- A função `fct_relevel` recebe um fator e uma série `strings` permutando os níveis desse fator. Não é necessário que todos os níveis apareçam nessa sequência. Essa função é particularmente útil para "puxar" um fator para o nível mais baixo, mantendo os outros com a mesma ordem relativa. É uma generalização da função `relevel` do pacote `stats`.
 
 ```{r}
 
