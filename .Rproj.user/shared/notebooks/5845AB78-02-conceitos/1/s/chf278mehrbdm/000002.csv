@@ -1,0 +1,7 @@
+"0","bd_enasp_abj <- bd_enasp_abj %>% 
+  mutate(instrumento.usado = fct_collapse(instrumento.usado,
+    `Arma branca` = c(""Faca"", ""Fio elétrico"", ""Fio elétrico (vítima foi estrangulada)"", ""Fogo""),
+    `Arma de Fogo` = c(""Pistola"", ""Revólver"", ""Arma de fogo"",""38"")),
+    instrumento.usado = fct_lump(instrumento.usado, 2, other_level = ""Outros""))
+"
+"2","Unknown levels in `f`: Faca, Fio elétrico, Fio elétrico (vítima foi estrangulada), Fogo, Pistola, Revólver, Arma de fogo, 38"

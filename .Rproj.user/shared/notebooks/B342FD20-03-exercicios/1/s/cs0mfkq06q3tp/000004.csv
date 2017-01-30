@@ -1,0 +1,4 @@
+"0","f3 <- lvls_reorder(f1, rev(letters))
+"
+"2","Erro: `idx` must be numeric
+"
