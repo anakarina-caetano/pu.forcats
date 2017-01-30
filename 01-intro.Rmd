@@ -13,9 +13,7 @@ library(dplyr)
 library(forcats)
 library(ggplot2)
 
-bd_enasp_abj <- openxlsx::read.xlsx(xlsxFile = "/home/fcorrea2/Downloads/Banco de dados Cruzamentos.xlsx") %>% 
-  filter(instrumento.usado != "Excluir") %>% 
-  mutate_all(funs(as.factor))
+bd_enasp_abj <- readRDS("data/base_forcats.rds")
 ```
 
 ## Introdução
