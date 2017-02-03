@@ -1,6 +1,6 @@
 ---
 title: Introdução
-date: '2017-01-31'
+date: '2017-02-03'
 ---
 
 
@@ -13,22 +13,22 @@ Se você já utilizou R anteriormente, provavelmente já escreveu a expressão `
 
 Felizmente, depois de aprender a usar o `tidyverse` você não terá mais esse problema, pois o pacote `readr` não lê colunas de caracteres como fatores por padrão. Mas isso não significa que fatores são inúteis. Eles representam uma forma muito prática de lidar com variáveis categorizadas, tanto para fins de modelagem quanto para fins de visualização. 
 
-Grande parte da frustração associada ao uso de fatores no R existe por conta da falta de algumas ferramentas úteis no pacote `base`. Para resolver esse o problema, Hadley Wickham ajudou a comunidade R (de novo) desenvolvendo o pacote `forcats`(**for** **ca**tegorial variable**s**), que implementa algumas dessas ferramentas.
+Grande parte da frustração associada ao uso de fatores no R existe por conta da falta de algumas ferramentas úteis no pacote `base`. Para resolver esse o problema, Hadley Wickham ajudou a comunidade R (de novo) desenvolvendo o pacote `forcats`(**for** **cat**egorial variable**s**), que implementa algumas dessas ferramentas.
 
 As principais funções do `forcats` servem para alterar a **ordem** e modificar os **níveis** de um fator. Para exemplificar a utilidade dessas funções, neste Power Up vamos utilizá-las em situações corriqueiras.
 
 # Relembrando: o que são fatores?
 
-Em R, fatores são estruturas de dados utilizadas para ordenar `strings`. Formalmente, um fator é definido como um vetor de `integers` com dois atributos específicos:
+No R, fatores são estruturas de dados utilizadas para ordenar `strings`. Formalmente, um fator é definido como um vetor de `integers` com dois atributos específicos:
 
-- `levels`: Um vetor de `strings` que indica a relação de ordem entre as variáveis.
-- `class`: A `string` atômica `"factor"`.
+- `levels`: m vetor de `strings` que indica a relação de ordem entre as variáveis.
+- `class`: a `string` atômica `"factor"`.
 
 Em modelos estatísticos clássicos, como ANOVA, é útil e adequado interpretar um vetor de textos como um vetor de números inteiros. O nome "fator", inclusive, foi definido fazendo alusão à literatura estatística.
 
 # Para que fatores servem?
 
-Fatores são úteis porque facilitam a ordenação de vetores de texto, principalmente quando estamos fazendo gráficos. Nesta seção vamos exemplificar essa facilidade com um exemplo.
+Fatores são úteis porque facilitam a ordenação de vetores de texto, principalmente quando estamos fazendo gráficos. Nesta seção, vamos exemplificar essa facilidade com um exemplo.
 
 Considere que temos interesse em construir um gráfico que ilustre a diminuição da pressão sanguinea de um conjunto de indivíduos em função do restaurante em que acabaram de jantar. Para realizar esta tarefa, fomos à praça de alimentação de um shopping e anotamos as pressões arteriais de 10 voluntários conforme eles terminavam suas refeições nos restarantes Max Donalds, Frutaria da vila e Outlet.
 
@@ -84,7 +84,7 @@ ggplot(aes(x = restaurante, y = pressao)) +
 O `forcats` é um pacote bastante simples. Ele é composto por funções de apenas dois tipos:
 
 - Funções que começam com `fct_`, que recebem uma lista de fatores e devolvem um fator.
-    - Exemplo: `fct_c` recebe uma lista de fatores e devolve um fator que é a união dos anteriores.s
+    - Exemplo: `fct_c` recebe uma lista de fatores e devolve um fator que é a união dos anteriores.
     
 
 ```r
@@ -119,13 +119,13 @@ fator <- forcats::lvls_revalue(fator, novos_niveis)
 
 ## Principais funções
 
-Nesta seção vamos estudar o funcionamento das principais funções do `forcats` utilizando como motivação a visualização dos dados de uma base analisada pela Associação Brasileira de Jurimetria. A base foi simplificada para otimizar seu uso neste curso. Além disso, os dados passaram por um processo de anonimização, pois os resultados ainda não foram divulgados.
+Nesta seção, vamos estudar o funcionamento das principais funções do `forcats` utilizando como motivação a visualização dos dados de uma base analisada pela Associação Brasileira de Jurimetria. A base foi simplificada para otimizar seu uso neste curso. Além disso, os dados passaram por um processo de anonimização, pois os resultados ainda não foram divulgados.
 
 A base contém informações sobre uma amostra de vítimas de homicídios no município de São Paulo e é composta pelas seguintes variáveis:
 
-- `instrumento.usado`: Instrumento usado pelo crime.
-- `sexo.vítima`: Sexo da vítima.
-- `idade.vítima`: Idade da vítima.
+- `instrumento.usado`: instrumento usado pelo crime.
+- `sexo.vítima`: sexo da vítima.
+- `idade.vítima`: idade da vítima.
 
 # Modificar níveis de fatores
 
@@ -145,7 +145,7 @@ A tabela abaixo ilustra a distribuição dos valores da variável `instrumento.u
 |Fio elétrico                           |          1|
 |Pistola                                |          1|
 
-Como existe uma grande variabilidade de instrumentos, no que segue vamos reclassificar a variável `instrumento.usado` em um fator com níveis menos gerais.
+Como existe uma grande variabilidade de instrumentos, vamos reclassificar a variável `instrumento.usado` em um fator com níveis menos gerais.
 
 Para realizar essa tarefa, vamos utilizar a função `fct_collapse` e a função `fct_lump`. A função `fct_collapse` é uma generalização de uma outra função chamada `fct_recode`. A função `fct_collapse` recebe um fator e uma série nomeada de vetores de `strings`,  enquanto a função `fct_recode` recebe um fator e uma série de `strings` nomeadas. Já a função `fct_lump` transforma os níveis menos frequentes de um fator em um nível "Outros".
 
@@ -168,7 +168,7 @@ fct_lump(fator, 2, other_level = "Outros")
 ## Levels: a b Outros
 ```
 
-Voltando à nossa aplicação, vamos utilizar a função `fct_collapse` para recodificar a variável `instrumento.usado`. Após essa reclassificação, os níveis com poucas contagens serão convertido num nível "Outros" através do uso da função `fct_lump`:
+Voltando à nossa aplicação, vamos utilizar a função `fct_collapse` para recodificar a variável `instrumento.usado`. Após essa reclassificação, os níveis com poucas contagens serão convertidos em "Outros" por meio da função `fct_lump`:
 
 
 ```r
@@ -255,7 +255,7 @@ bd_teste %>%
 
 No `forcats`, a reordenação equivalente a criar o fator novamente pode ser feita de três maneiras:
 
-- `lvl_reorder`, que reordena os níveis de um fator de acordo com um conjunto de índices. Recomenda-se o uso dessa função quando se quer reordenar os níveis de uma maneira facilmente parametrizável como uma permutação dos índices dos níveis. Um exemplo comum é quando se tem interesse em trocar a ordem dos níveis de crescente para decrescente.
+- `lvl_reorder`, que reordena os níveis de um fator de acordo com um conjunto de índices. Recomenda-se o uso dessa função quando se quer reordenar os níveis de uma maneira facilmente parametrizável, como uma permutação dos índices dos níveis. Um exemplo comum é trocar a ordem dos níveis de crescente para decrescente.
 
 
 ```r
@@ -290,8 +290,7 @@ fct_reorder(fator, vetor, fun = mean)
 
 fator <- factor(c("a","a","a","b","b","c"))
 
-
-#ordena os níveis de acordo com a média da variável vetor em cada nível
+#"puxa" os níveis "b" e "c" para o começo
 fct_relevel(fator, "b","c")
 ## [1] a a a b b c
 ## Levels: b c a
@@ -299,16 +298,13 @@ fct_relevel(fator, "b","c")
 
 Na nossa aplicação, podemos utilizar tanto a função `lvls_reorder` quanto a função `fct_relevel`. O gráfico resultante ordena os níveis de instrumento.usado como queríamos.
 
-
-```
-## Error in mutate_impl(.data, dots): `idx` must contain one integer for each level of `f`
-```
+<img src="figures//unnamed-chunk-21-1.png" title="plot of chunk unnamed-chunk-21" alt="plot of chunk unnamed-chunk-21" width="60%" height="60%" />
 
 # Fazendo tudo de uma vez
 
-Nesta sessão vamos utilizar as funções para exemplificar utilizações do pacote `forcats` para visualizações.
+Nesta sessão, vamos utilizar as funções para exemplificar utilizações do pacote `forcats` para visualizações.
 
-A visualização abaixo ordena os níveis de "instrumento.usado" de acordo com a média de idade das vítimas de homicídio.
+A visualização abaixo ordena os níveis de "instrumento.usado" de acordo com a mediana da idade das vítimas de homicídio.
 
 
 ```r
