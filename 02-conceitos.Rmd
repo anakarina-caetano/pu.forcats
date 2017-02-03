@@ -7,7 +7,7 @@ title: "Conceitos"
 O `forcats` é um pacote bastante simples. Ele é composto por funções de apenas dois tipos:
 
 - Funções que começam com `fct_`, que recebem uma lista de fatores e devolvem um fator.
-    - Exemplo: `fct_c` recebe uma lista de fatores e devolve um fator que é a união dos anteriores.s
+    - Exemplo: `fct_c` recebe uma lista de fatores e devolve um fator que é a união dos anteriores.
     
 ```{r}
 
@@ -39,13 +39,13 @@ fator <- forcats::lvls_revalue(fator, novos_niveis)
 
 ## Principais funções
 
-Nesta seção vamos estudar o funcionamento das principais funções do `forcats` utilizando como motivação a visualização dos dados de uma base analisada pela Associação Brasileira de Jurimetria. A base foi simplificada para otimizar seu uso neste curso. Além disso, os dados passaram por um processo de anonimização, pois os resultados ainda não foram divulgados.
+Nesta seção, vamos estudar o funcionamento das principais funções do `forcats` utilizando como motivação a visualização dos dados de uma base analisada pela Associação Brasileira de Jurimetria. A base foi simplificada para otimizar seu uso neste curso. Além disso, os dados passaram por um processo de anonimização, pois os resultados ainda não foram divulgados.
 
 A base contém informações sobre uma amostra de vítimas de homicídios no município de São Paulo e é composta pelas seguintes variáveis:
 
-- `instrumento.usado`: Instrumento usado pelo crime.
-- `sexo.vítima`: Sexo da vítima.
-- `idade.vítima`: Idade da vítima.
+- `instrumento.usado`: instrumento usado pelo crime.
+- `sexo.vítima`: sexo da vítima.
+- `idade.vítima`: idade da vítima.
 
 # Modificar níveis de fatores
 
@@ -61,7 +61,7 @@ bd_enasp_abj %>%
 
 ```
 
-Como existe uma grande variabilidade de instrumentos, no que segue vamos reclassificar a variável `instrumento.usado` em um fator com níveis menos gerais.
+Como existe uma grande variabilidade de instrumentos, vamos reclassificar a variável `instrumento.usado` em um fator com níveis menos gerais.
 
 Para realizar essa tarefa, vamos utilizar a função `fct_collapse` e a função `fct_lump`. A função `fct_collapse` é uma generalização de uma outra função chamada `fct_recode`. A função `fct_collapse` recebe um fator e uma série nomeada de vetores de `strings`,  enquanto a função `fct_recode` recebe um fator e uma série de `strings` nomeadas. Já a função `fct_lump` transforma os níveis menos frequentes de um fator em um nível "Outros".
 
@@ -78,7 +78,7 @@ fct_lump(fator, 2, other_level = "Outros")
 
 ```
 
-Voltando à nossa aplicação, vamos utilizar a função `fct_collapse` para recodificar a variável `instrumento.usado`. Após essa reclassificação, os níveis com poucas contagens serão convertido num nível "Outros" através do uso da função `fct_lump`:
+Voltando à nossa aplicação, vamos utilizar a função `fct_collapse` para recodificar a variável `instrumento.usado`. Após essa reclassificação, os níveis com poucas contagens serão convertidos em "Outros" por meio da função `fct_lump`:
 
 ```{r}
 
@@ -163,7 +163,7 @@ bd_teste %>%
 
 No `forcats`, a reordenação equivalente a criar o fator novamente pode ser feita de três maneiras:
 
-- `lvl_reorder`, que reordena os níveis de um fator de acordo com um conjunto de índices. Recomenda-se o uso dessa função quando se quer reordenar os níveis de uma maneira facilmente parametrizável como uma permutação dos índices dos níveis. Um exemplo comum é quando se tem interesse em trocar a ordem dos níveis de crescente para decrescente.
+- `lvl_reorder`, que reordena os níveis de um fator de acordo com um conjunto de índices. Recomenda-se o uso dessa função quando se quer reordenar os níveis de uma maneira facilmente parametrizável, como uma permutação dos índices dos níveis. Um exemplo comum é trocar a ordem dos níveis de crescente para decrescente.
 
 ```{r}
 
@@ -193,8 +193,7 @@ fct_reorder(fator, vetor, fun = mean)
 
 fator <- factor(c("a","a","a","b","b","c"))
 
-
-#ordena os níveis de acordo com a média da variável vetor em cada nível
+#"puxa" os níveis "b" e "c" para o começo
 fct_relevel(fator, "b","c")
 
 
@@ -205,7 +204,7 @@ Na nossa aplicação, podemos utilizar tanto a função `lvls_reorder` quanto a 
 ```{r, echo = F}
 
 bd_enasp_abj %>%
-  mutate(instrumento.usado = lvls_reorder(instrumento.usado, c(4,5,2,1,3))) %>% 
+  mutate(instrumento.usado = lvls_reorder(instrumento.usado, c(3, 2, 1))) %>% 
   ggplot(aes(x = instrumento.usado, fill = instrumento.usado)) + 
   geom_bar() +
   theme_bw(15) +
@@ -217,9 +216,9 @@ bd_enasp_abj %>%
 
 # Fazendo tudo de uma vez
 
-Nesta sessão vamos utilizar as funções para exemplificar utilizações do pacote `forcats` para visualizações.
+Nesta sessão, vamos utilizar as funções para exemplificar utilizações do pacote `forcats` para visualizações.
 
-A visualização abaixo ordena os níveis de "instrumento.usado" de acordo com a média de idade das vítimas de homicídio.
+A visualização abaixo ordena os níveis de "instrumento.usado" de acordo com a mediana da idade das vítimas de homicídio.
 
 ```{r}
 bd_enasp_abj %>%

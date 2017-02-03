@@ -24,22 +24,22 @@ Se você já utilizou R anteriormente, provavelmente já escreveu a expressão `
 
 Felizmente, depois de aprender a usar o `tidyverse` você não terá mais esse problema, pois o pacote `readr` não lê colunas de caracteres como fatores por padrão. Mas isso não significa que fatores são inúteis. Eles representam uma forma muito prática de lidar com variáveis categorizadas, tanto para fins de modelagem quanto para fins de visualização. 
 
-Grande parte da frustração associada ao uso de fatores no R existe por conta da falta de algumas ferramentas úteis no pacote `base`. Para resolver esse o problema, Hadley Wickham ajudou a comunidade R (de novo) desenvolvendo o pacote `forcats`(**for** **ca**tegorial variable**s**), que implementa algumas dessas ferramentas.
+Grande parte da frustração associada ao uso de fatores no R existe por conta da falta de algumas ferramentas úteis no pacote `base`. Para resolver esse o problema, Hadley Wickham ajudou a comunidade R (de novo) desenvolvendo o pacote `forcats`(**for** **cat**egorial variable**s**), que implementa algumas dessas ferramentas.
 
 As principais funções do `forcats` servem para alterar a **ordem** e modificar os **níveis** de um fator. Para exemplificar a utilidade dessas funções, neste Power Up vamos utilizá-las em situações corriqueiras.
 
 # Relembrando: o que são fatores?
 
-Em R, fatores são estruturas de dados utilizadas para ordenar `strings`. Formalmente, um fator é definido como um vetor de `integers` com dois atributos específicos:
+No R, fatores são estruturas de dados utilizadas para ordenar `strings`. Formalmente, um fator é definido como um vetor de `integers` com dois atributos específicos:
 
-- `levels`: Um vetor de `strings` que indica a relação de ordem entre as variáveis.
-- `class`: A `string` atômica `"factor"`.
+- `levels`: m vetor de `strings` que indica a relação de ordem entre as variáveis.
+- `class`: a `string` atômica `"factor"`.
 
 Em modelos estatísticos clássicos, como ANOVA, é útil e adequado interpretar um vetor de textos como um vetor de números inteiros. O nome "fator", inclusive, foi definido fazendo alusão à literatura estatística.
 
 # Para que fatores servem?
 
-Fatores são úteis porque facilitam a ordenação de vetores de texto, principalmente quando estamos fazendo gráficos. Nesta seção vamos exemplificar essa facilidade com um exemplo.
+Fatores são úteis porque facilitam a ordenação de vetores de texto, principalmente quando estamos fazendo gráficos. Nesta seção, vamos exemplificar essa facilidade com um exemplo.
 
 Considere que temos interesse em construir um gráfico que ilustre a diminuição da pressão sanguinea de um conjunto de indivíduos em função do restaurante em que acabaram de jantar. Para realizar esta tarefa, fomos à praça de alimentação de um shopping e anotamos as pressões arteriais de 10 voluntários conforme eles terminavam suas refeições nos restarantes Max Donalds, Frutaria da vila e Outlet.
 
