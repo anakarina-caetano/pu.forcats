@@ -1,6 +1,6 @@
 ---
-title: Introdução
-date: '2017-02-03'
+title: 'Manipulando fatores'
+date: '2017-10-10'
 ---
 
 
