@@ -18,7 +18,7 @@ fator_3_sem_sentido <- c(fator_1, fator_2)
 
 fator_3_sem_sentido
 
-fator_3_com_sentido <- forcats::fct_c(list(fator_1, fator_2))
+fator_3_com_sentido <- forcats::fct_c(fator_1, fator_2)
 
 fator_3_com_sentido
 
