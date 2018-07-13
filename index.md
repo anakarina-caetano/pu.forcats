@@ -1,6 +1,6 @@
 ---
 title: 'Manipulando fatores'
-date: '2017-10-10'
+date: '2018-07-13'
 ---
 
 
@@ -97,7 +97,7 @@ fator_3_sem_sentido <- c(fator_1, fator_2)
 fator_3_sem_sentido
 ## [1] 1 2 3 1 2
 
-fator_3_com_sentido <- forcats::fct_c(list(fator_1, fator_2))
+fator_3_com_sentido <- forcats::fct_c(fator_1, fator_2)
 
 fator_3_com_sentido
 ## [1] a b c d e
